@@ -1,0 +1,70 @@
+{
+  "_comment": "Services the owner offers. keywords are regexes matched on the lowercase customer message. items point at ids in prices.json. 'group' items are alternatives: the one whose 'when' matches is used; if none matches, all are shown as options and left out of the total.",
+  "max_services": 3,
+  "services": [
+    {"id": "ats", "name": "ATS (automatic transfer switch)",
+     "keywords": ["\\bats\\b", "transfer switch", "changeover"],
+     "questions": ["What amperage do you need (100A or higher)?", "Regular or premium quality?", "Single-phase or three-phase?"],
+     "items": [
+       {"price_id": "ats_100a_regular", "group": "ats", "when": "regular|standard|basic"},
+       {"price_id": "ats_100a_premium", "group": "ats", "when": "premium|best|original"}
+     ]},
+    {"id": "contactor", "name": "Contactors and components",
+     "keywords": ["\\bcontactor", "\\brelay", "\\bcomponent"],
+     "questions": ["What is the rating (amps) and coil voltage, or can you send a photo of the old one?", "How many do you need?"],
+     "items": [
+       {"price_id": "contactor", "qty": "(\\d+)\\s*(?:x\\s*)?contactors?"}
+     ]},
+    {"id": "pump_motor", "name": "Pump or motor rewinding",
+     "keywords": ["\\bcoil", "\\brewind", "\\bpump", "\\bmotor"],
+     "questions": ["What is the pump or motor rating (HP or kW) and brand?", "Can you send a photo, or bring the machine for inspection?"],
+     "items": [
+       {"price_id": "inspection"},
+       {"price_id": "rewind_job"}
+     ]},
+    {"id": "solar", "name": "Solar installation",
+     "keywords": ["\\bsolar", "\\binverter"],
+     "questions": ["Is it for a home or a business?", "What do you want to power (lights, fridge, AC)?"],
+     "items": [
+       {"price_id": "site_survey"}
+     ]},
+    {"id": "cctv", "name": "CCTV",
+     "keywords": ["\\bcctv", "\\bcamera"],
+     "questions": ["How many cameras do you need?", "Indoor or outdoor cameras?"],
+     "items": [
+       {"price_id": "cctv_camera", "qty": "(\\d+)\\s*(?:x\\s*)?(?:cctv\\s*)?cameras?"}
+     ]},
+    {"id": "burnt_wiring", "name": "Burnt or damaged wiring",
+     "keywords": ["\\bburn", "\\bdamage"],
+     "questions": ["Which room or area is affected?", "Can you send a photo, only if it is safe?"],
+     "items": [
+       {"price_id": "inspection"}
+     ]},
+    {"id": "switch_socket", "name": "Switch or socket fault",
+     "keywords": ["\\bswitch", "\\bsocket"],
+     "questions": ["Which switch or socket is it?", "What is happening (no power, tripping, hot)?"],
+     "items": [
+       {"price_id": "switch_socket_point", "qty": "(\\d+)\\s*(?:x\\s*)?(?:switch(?:es)?|sockets?)"}
+     ]},
+    {"id": "house_wiring", "name": "House wiring",
+     "keywords": ["\\bwiring", "\\bwire\\b", "\\bbedroom", "\\brewire"],
+     "questions": ["How many bedrooms, and is it new wiring or a rewire?"],
+     "items": [
+       {"price_id": "wiring_per_bedroom", "qty": "(\\d+)\\s*(?:-|to)?\\s*(\\d+)?\\s*(?:bed(?:room)?s?\\b)"}
+     ]},
+    {"id": "equipment", "name": "Urgent equipment repair",
+     "keywords": ["\\biron\\b", "\\bgrind", "\\bblender", "\\bheater", "\\bappliance"],
+     "questions": ["What equipment is it and what is it doing?", "Can you bring it in, or must we come to you?"],
+     "items": [
+       {"price_id": "inspection"}
+     ]}
+  ],
+  "remove_when_present": [
+    {"keep": "ats", "drop": "switch_socket"},
+    {"keep": "burnt_wiring", "drop": "house_wiring"},
+    {"keep": "pump_motor", "drop": "burnt_wiring"},
+    {"keep": "pump_motor", "drop": "house_wiring"}
+  ],
+  "danger_keywords": ["\\bburn", "\\bsmoke", "\\bspark", "\\bshock", "\\bfire", "electrocut", "\\bmelt", "overheat", "hot wire", "\\bsmell", "explod"],
+  "urgent_keywords": ["\\burgent", "\\bemergency", "\\bimmediate", "\\basap\\b", "right now"]
+}

@@ -1,0 +1,69 @@
+MESSAGE (en): Pls my building get damage, I need to replace the wiring, light just burnt
+SERVICES: Burnt or damaged wiring | URGENCY: EMERGENCY | SUBTOTAL: 5000 | UNPRICED: 0
+Hello, thank you for contacting Your Business. Here is your quote:
+- Inspection / diagnosis visit: ₦5,000
+Total for priced items: ₦5,000
+To help you faster, please tell us: (1) Which room or area is affected? (2) Can you send a photo, only if it is safe?
+If it is safe to do so, please switch off at the main breaker and keep away from the area until we reach you.
+------------------------------------------------------------
+MESSAGE (pidgin): my pump coil don burn, abeg how much to rewind am
+SERVICES: Pump or motor rewinding | URGENCY: EMERGENCY | SUBTOTAL: 5000 | UNPRICED: 1
+Hello, thank you say you contact Your Business. Dis na your quote:
+- Inspection / diagnosis visit: ₦5,000
+- Pump / motor rewinding: price to be confirmed by the owner
+Total for di priced things: ₦5,000
+Di items wey say 'to be confirmed', di owner go confirm di price after e see di job.
+To help you quick, abeg tell us: (1) What is the pump or motor rating (HP or kW) and brand? (2) Can you send a photo, or bring the machine for inspection?
+If it is safe to do so, please switch off at the main breaker and keep away from the area until we reach you.
+------------------------------------------------------------
+MESSAGE (en): The switch in my parlour no dey work, and two sockets dey spark
+SERVICES: Switch or socket fault | URGENCY: EMERGENCY | SUBTOTAL: 7000 | UNPRICED: 0
+Hello, thank you for contacting Your Business. Here is your quote:
+- Switch or socket (supply and fit): 2 x ₦3,500 = ₦7,000
+Total for priced items: ₦7,000
+To help you faster, please tell us: (1) Which switch or socket is it? (2) What is happening (no power, tripping, hot)?
+If it is safe to do so, please switch off at the main breaker and keep away from the area until we reach you.
+------------------------------------------------------------
+MESSAGE (en): I need wiring for a 2-3 bedroom flat
+SERVICES: House wiring | URGENCY: NORMAL | SUBTOTAL: 360000 | UNPRICED: 0
+Hello, thank you for contacting Your Business. Here is your quote:
+- House wiring, per bedroom: 3 x ₦120,000 = ₦360,000
+Total for priced items: ₦360,000
+Note: quoted for 3 (upper end of the range you gave).
+To help you faster, please tell us: (1) How many bedrooms, and is it new wiring or a rewire?
+------------------------------------------------------------
+MESSAGE (en): I want solar and 4 CCTV cameras for my shop
+SERVICES: Solar installation, CCTV | URGENCY: NORMAL | SUBTOTAL: 120000 | UNPRICED: 1
+Hello, thank you for contacting Your Business. Here is your quote:
+- Solar site survey and design: price to be confirmed by the owner
+- CCTV camera (installed): 4 x ₦30,000 = ₦120,000
+Total for priced items: ₦120,000
+Items marked 'to be confirmed' will be priced by the owner after seeing the job.
+To help you faster, please tell us: (1) Is it for a home or a business? (2) What do you want to power (lights, fridge, AC)? (3) How many cameras do you need? (4) Indoor or outdoor cameras?
+------------------------------------------------------------
+MESSAGE (en): urgent! my pressing iron and grinding machine stopped working
+SERVICES: Urgent equipment repair | URGENCY: URGENT | SUBTOTAL: 5000 | UNPRICED: 0
+Hello, thank you for contacting Your Business. Here is your quote:
+- Inspection / diagnosis visit: ₦5,000
+Total for priced items: ₦5,000
+To help you faster, please tell us: (1) What equipment is it and what is it doing? (2) Can you bring it in, or must we come to you?
+------------------------------------------------------------
+MESSAGE (en): How much is an ATS 100A premium and the regular one?
+SERVICES: ATS (automatic transfer switch) | URGENCY: NORMAL | SUBTOTAL: 0 | UNPRICED: 0
+Hello, thank you for contacting Your Business. Here is your quote:
+- Option: ATS 100A, regular quality: ₦85,000
+- Option: ATS 100A, premium quality: ₦140,000
+Pick one option and we will confirm.
+To help you faster, please tell us: (1) What amperage do you need (100A or higher)? (2) Regular or premium quality? (3) Single-phase or three-phase?
+------------------------------------------------------------
+MESSAGE (en): I need 3 contactors and a relay, what is the price
+SERVICES: Contactors and components | URGENCY: NORMAL | SUBTOTAL: 36000 | UNPRICED: 0
+Hello, thank you for contacting Your Business. Here is your quote:
+- Contactor (supply and fit): 3 x ₦12,000 = ₦36,000
+Total for priced items: ₦36,000
+To help you faster, please tell us: (1) What is the rating (amps) and coil voltage, or can you send a photo of the old one? (2) How many do you need?
+------------------------------------------------------------
+MESSAGE (en): hello good morning
+SERVICES: - | URGENCY: NORMAL | SUBTOTAL: 0 | UNPRICED: 0
+Hello, thank you for contacting Your Business. Please tell us what you need so we can prepare a quote.
+------------------------------------------------------------

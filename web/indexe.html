@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quote Desk</title>
+<style>
+  :root { --bg:#f6f7f4; --card:#fff; --ink:#1b2a22; --mute:#5b6b62; --brand:#0f6b4f; --brand-ink:#fff;
+          --warn:#a33a00; --warn-bg:#fff1e6; --line:#dfe5df; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#101613; --card:#18201c; --ink:#e8efe9; --mute:#9fb0a6; --brand:#3fbf8f; --brand-ink:#06251a;
+            --warn:#ffb98a; --warn-bg:#3a2415; --line:#2a3630; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 1.5rem; margin: 8px 0 2px; }
+  .sub { color: var(--mute); margin: 0 0 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  label { display:block; font-weight:600; margin-bottom:6px; }
+  textarea, select { width:100%; font:inherit; color:inherit; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px; }
+  textarea { min-height: 120px; resize: vertical; }
+  .row { display:flex; gap:12px; flex-wrap:wrap; align-items:end; margin-top:12px; }
+  .row > div { flex: 1 1 160px; }
+  button { font:inherit; font-weight:600; border:0; border-radius:8px; padding:12px 16px; cursor:pointer; background:var(--brand); color:var(--brand-ink); }
+  button.alt { background:transparent; color:var(--ink); border:1px solid var(--line); }
+  button:disabled { opacity:.6; cursor:wait; }
+  .banner { border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:.95rem; }
+  .sample { background: var(--warn-bg); color: var(--warn); }
+  .emergency { background: var(--warn-bg); color: var(--warn); font-weight:700; }
+  table { width:100%; border-collapse: collapse; margin: 8px 0; }
+  th, td { text-align:left; padding:8px 4px; border-bottom:1px solid var(--line); vertical-align: top; }
+  td.num, th.num { text-align:right; white-space: nowrap; }
+  .tbc { color: var(--mute); font-style: italic; }
+  pre { white-space: pre-wrap; word-wrap: break-word; font: inherit; background: var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px; margin:8px 0; }
+  .meta { color: var(--mute); font-size: .9rem; }
+  .err { color: var(--warn); }
+  .actions { display:flex; gap:8px; flex-wrap: wrap; margin-top:8px; }
+  .hidden { display:none; }
+  @media print { body { background:#fff; color:#000; } .noprint, textarea, select, .actions, .owner { display:none !important; }
+    .card { border:0; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Quote Desk</h1>
+  <p class="sub noprint">Paste a customer's message. Get a priced quote and a message ready to send on WhatsApp.</p>
+
+  <div class="card noprint">
+    <div id="sampleBanner" class="banner sample hidden">Sample prices are loaded. The numbers below are placeholders, not the owner's real prices.</div>
+    <label for="msg">Customer message</label>
+    <textarea id="msg" placeholder="e.g. I need wiring for a 2 bedroom flat and 4 CCTV cameras"></textarea>
+    <div class="row">
+      <div><label for="lang">Reply language</label>
+        <select id="lang"><option value="en">English</option><option value="pidgin">Pidgin</option></select></div>
+      <div><label for="phone">Customer WhatsApp (optional, digits only)</label>
+        <input id="phone" inputmode="numeric" placeholder="2348012345678" style="width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:inherit"></div>
+    </div>
+    <div class="row"><div><button id="go">Make quote</button></div></div>
+    <p id="err" class="err"></p>
+  </div>
+
+  <div id="out" class="hidden">
+    <div class="card owner noprint">
+      <div id="danger" class="banner emergency hidden">SAFETY FLAG: possible fire or shock risk. Call the customer now.</div>
+      <div class="meta">For the owner only</div>
+      <div id="ownerInfo"></div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0" id="qTitle">Quote</h2>
+      <table id="tbl"><thead><tr><th>Item</th><th class="num">Price</th></tr></thead><tbody></tbody></table>
+      <div id="total" style="font-weight:700"></div>
+      <h3>Message to send</h3>
+      <pre id="text"></pre>
+      <div class="meta" id="by"></div>
+      <div class="actions noprint">
+        <button id="wa">Send on WhatsApp</button>
+        <button id="copy" class="alt">Copy text</button>
+        <button id="print" class="alt">Print quote</button>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let last = null;
+function money(sym, n){ return sym + Number(n).toLocaleString("en-US", {maximumFractionDigits: 2}); }
+fetch("/api/status").then(r => r.json()).then(s => { if (s.prices === "sample") $("sampleBanner").classList.remove("hidden"); }).catch(() => {});
+
+$("go").onclick = async () => {
+  $("err").textContent = ""; $("go").disabled = true; $("go").textContent = "Working...";
+  try {
+    const r = await fetch("/api/quote", { method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ message: $("msg").value, language: $("lang").value }) });
+    const q = await r.json();
+    if (!r.ok) throw new Error(q.error || "Something went wrong");
+    last = q; render(q);
+  } catch (e) { $("err").textContent = e.message; }
+  $("go").disabled = false; $("go").textContent = "Make quote";
+};
+
+function render(q) {
+  $("out").classList.remove("hidden");
+  $("danger").classList.toggle("hidden", !q.danger);
+  $("ownerInfo").innerHTML = "<p><b>Services:</b> " + (q.services.join(", ") || "none recognised") +
+    "<br><b>Urgency:</b> " + q.urgency + "</p>" +
+    (q.questions.length ? "<p><b>Ask the customer:</b></p><ul>" + q.questions.map(x => "<li></li>").join("") + "</ul>" : "");
+  const lis = $("ownerInfo").querySelectorAll("li"); q.questions.forEach((x, i) => lis[i].textContent = x);
+  $("qTitle").textContent = "Quote from " + q.business + (q.sample_prices ? " (SAMPLE PRICES)" : "");
+  const tb = $("tbl").querySelector("tbody"); tb.innerHTML = "";
+  q.lines.forEach(ln => {
+    const tr = document.createElement("tr"), a = document.createElement("td"), b = document.createElement("td");
+    a.textContent = (ln.option ? "Option: " : "") + ln.name + (ln.qty > 1 ? "  x" + ln.qty : "");
+    b.className = "num";
+    if (ln.total === null) { b.textContent = "to be confirmed"; b.classList.add("tbc"); }
+    else b.textContent = money(q.symbol, ln.total);
+    tr.append(a, b); tb.append(tr);
+  });
+  $("total").textContent = q.subtotal > 0 ? "Total for priced items: " + money(q.symbol, q.subtotal) : "";
+  $("text").textContent = q.card_text;
+  $("by").textContent = "Written by: " + q.phrased_by;
+}
+
+$("wa").onclick = () => {
+  if (!last) return;
+  const p = $("phone").value.replace(/\D/g, "");
+  window.open((p ? "https://wa.me/" + p : "https://wa.me/") + "?text=" + encodeURIComponent(last.card_text), "_blank");
+};
+$("copy").onclick = async () => {
+  try { await navigator.clipboard.writeText(last.card_text); $("copy").textContent = "Copied"; }
+  catch (e) { $("copy").textContent = "Select the text and copy"; }
+  setTimeout(() => $("copy").textContent = "Copy text", 1500);
+};
+$("print").onclick = () => window.print();
+</script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quote Desk</title>
+<meta name="description" content="Turn a customer's message into a priced quote and a WhatsApp reply. Open-weight AI phrases it, your own price list decides the numbers.">
+<style>
+  :root { --bg:#f3f5f2; --card:#fff; --ink:#16231c; --mute:#5a6a61; --brand:#0e6b4e; --brand2:#0a5640; --brand-ink:#fff;
+          --line:#dde4de; --soft:#eef3ef; --warn:#9a3300; --warn-bg:#fff0e4; --ok:#0e6b4e; --ok-bg:#e3f4ec;
+          --shadow:0 1px 2px rgba(16,35,27,.06),0 4px 14px rgba(16,35,27,.06); }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0e1411; --card:#161e1a; --ink:#e7eee9; --mute:#9bada2; --brand:#3fbf8f; --brand2:#2fa979; --brand-ink:#052116;
+            --line:#26332c; --soft:#1c2721; --warn:#ffb98a; --warn-bg:#38220f; --ok:#6fe0b3; --ok-bg:#163326; --shadow:none; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  header.top { background:var(--card); border-bottom:1px solid var(--line); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+  .bar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; flex-wrap:wrap; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15rem; letter-spacing:-.01em; }
+  .logo i { width:30px; height:30px; border-radius:8px; background:var(--brand); display:grid; place-items:center; color:var(--brand-ink); font-style:normal; font-size:.95rem; }
+  .pills { display:flex; gap:8px; flex-wrap:wrap; }
+  .pill { font-size:.8rem; padding:4px 10px; border-radius:999px; background:var(--soft); color:var(--mute); border:1px solid var(--line); }
+  .pill.warn { background:var(--warn-bg); color:var(--warn); border-color:transparent; font-weight:600; }
+  .pill.ok { background:var(--ok-bg); color:var(--ok); border-color:transparent; font-weight:600; }
+  main.grid { display:grid; grid-template-columns: minmax(0,420px) minmax(0,1fr); gap:20px; padding:20px 0 40px; align-items:start; }
+  @media (max-width: 860px) { main.grid { grid-template-columns: 1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; box-shadow:var(--shadow); margin-bottom:16px; }
+  h2 { font-size:1.05rem; margin:0 0 12px; }
+  h3 { font-size:.95rem; margin:16px 0 6px; }
+  label { display:block; font-weight:600; font-size:.9rem; margin:12px 0 6px; }
+  label:first-child { margin-top:0; }
+  textarea, select, input { width:100%; font:inherit; color:inherit; background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:10px 12px; }
+  textarea { min-height:130px; resize:vertical; }
+  textarea:focus, select:focus, input:focus, button:focus-visible { outline:2px solid var(--brand); outline-offset:1px; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:12px; } @media (max-width:480px){ .two{grid-template-columns:1fr;} }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .chip { font:inherit; font-size:.82rem; background:var(--soft); color:var(--ink); border:1px solid var(--line); border-radius:999px; padding:5px 10px; cursor:pointer; }
+  .chip:hover { border-color:var(--brand); }
+  button.primary { width:100%; margin-top:14px; font:inherit; font-weight:700; border:0; border-radius:10px; padding:13px 16px; cursor:pointer; background:var(--brand); color:var(--brand-ink); }
+  button.primary:hover { background:var(--brand2); } button.primary:disabled { opacity:.6; cursor:wait; }
+  button.btn { font:inherit; font-weight:600; font-size:.92rem; border-radius:10px; padding:9px 14px; cursor:pointer; background:var(--card); color:var(--ink); border:1px solid var(--line); }
+  button.btn:hover { border-color:var(--brand); } button.btn.wa { background:var(--brand); color:var(--brand-ink); border-color:var(--brand); }
+  .hint { color:var(--mute); font-size:.85rem; margin:8px 0 0; }
+  .err { color:var(--warn); font-weight:600; min-height:1.2em; margin:8px 0 0; }
+  .empty { text-align:center; color:var(--mute); padding:48px 16px; }
+  .hidden { display:none !important; }
+  .alert { border-radius:10px; padding:10px 12px; margin-bottom:12px; background:var(--warn-bg); color:var(--warn); font-weight:700; }
+  .badge { display:inline-block; font-size:.75rem; font-weight:700; padding:2px 8px; border-radius:999px; background:var(--soft); }
+  .badge.EMERGENCY { background:var(--warn-bg); color:var(--warn); } .badge.URGENT { background:#fff6d6; color:#6b5200; }
+  .doc-head { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; border-bottom:2px solid var(--brand); padding-bottom:10px; margin-bottom:10px; }
+  .doc-head b { font-size:1.2rem; } .doc-meta { text-align:right; color:var(--mute); font-size:.88rem; }
+  table { width:100%; border-collapse:collapse; } th { text-align:left; font-size:.8rem; color:var(--mute); text-transform:uppercase; letter-spacing:.04em; }
+  th, td { padding:9px 4px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .num { text-align:right; white-space:nowrap; } .tbc { color:var(--mute); font-style:italic; }
+  .total { display:flex; justify-content:space-between; font-weight:800; font-size:1.1rem; padding:12px 4px 0; }
+  .note { color:var(--mute); font-size:.88rem; margin:6px 0 0; }
+  pre.msg { white-space:pre-wrap; word-wrap:break-word; font:inherit; background:var(--soft); border:1px solid var(--line); border-radius:10px; padding:12px; margin:6px 0; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .by { color:var(--mute); font-size:.85rem; }
+  ul.q { margin:6px 0 0; padding-left:20px; } ul.q li { margin:2px 0; }
+  .hist-item { display:flex; justify-content:space-between; gap:8px; align-items:center; padding:9px 0; border-bottom:1px solid var(--line); cursor:pointer; font-size:.9rem; }
+  .hist-item:hover { color:var(--brand); } .hist-item small { color:var(--mute); display:block; }
+  footer { text-align:center; color:var(--mute); font-size:.82rem; padding:0 16px 28px; }
+  @media print {
+    body { background:#fff; color:#000; } header.top, .noprint, footer { display:none !important; }
+    main.grid { display:block; padding:0; } .card { border:0; box-shadow:none; padding:0; } .doc-head { border-color:#000; }
+  }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="bar">
+  <div class="logo"><i>Q</i><span>Quote Desk</span></div>
+  <div class="pills" id="pills" aria-label="Status"></div>
+</div></div></header>
+
+<div class="wrap"><main class="grid">
+  <section aria-label="New quote">
+    <div class="card noprint">
+      <h2>New quote</h2>
+      <label for="msg">Customer message</label>
+      <textarea id="msg" placeholder="Paste what the customer wrote, in English or Pidgin"></textarea>
+      <div class="chips" id="chips" aria-label="Try an example"></div>
+      <div class="two">
+        <div><label for="lang">Reply language</label>
+          <select id="lang"><option value="en">English</option><option value="pidgin">Pidgin</option></select></div>
+        <div><label for="name">Customer name (optional)</label><input id="name" placeholder="e.g. Mr Kofi" autocomplete="off"></div>
+      </div>
+      <label for="phone">Customer WhatsApp number (optional)</label>
+      <input id="phone" inputmode="numeric" placeholder="2348012345678 (digits only, with country code)" autocomplete="off">
+      <button class="primary" id="go">Make quote <span style="opacity:.7;font-weight:500">(Ctrl+Enter)</span></button>
+      <p class="err" id="err" role="alert"></p>
+      <p class="hint">Privacy: the customer's name and number stay in this browser. The model only ever sees the finished quote text.</p>
+    </div>
+
+    <div class="card noprint">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Recent quotes</h2>
+        <span><button class="btn" id="csv">Export CSV</button> <button class="btn" id="clear">Clear</button></span></div>
+      <div id="hist"><p class="hint">Nothing yet. Quotes are saved only in this browser.</p></div>
+    </div>
+  </section>
+
+  <section aria-live="polite" aria-label="Quote">
+    <div class="card empty" id="empty">Paste a customer message or tap an example, then press <b>Make quote</b>.</div>
+
+    <div id="out" class="hidden">
+      <div class="card noprint" id="ownerCard">
+        <div id="danger" class="alert hidden">SAFETY FLAG: possible fire or shock risk. Call the customer now.</div>
+        <h2>Owner view <span class="badge" id="urg"></span></h2>
+        <div><b>Services recognised:</b> <span id="svcs"></span></div>
+        <h3>Ask the customer</h3><ul class="q" id="qs"></ul>
+      </div>
+
+      <div class="card" id="docCard">
+        <div class="doc-head">
+          <div><b id="biz"></b><div class="note" id="contact"></div></div>
+          <div class="doc-meta"><div id="qno"></div><div id="qdate"></div><div id="qvalid"></div></div>
+        </div>
+        <div id="forWho" class="note"></div>
+        <table><thead><tr><th>Item</th><th class="num">Price</th></tr></thead><tbody id="rows"></tbody></table>
+        <div class="total hidden" id="total"><span>Total for priced items</span><span id="totalv"></span></div>
+        <div id="notes"></div>
+        <div class="note hidden" id="sampleNote">SAMPLE PRICES: placeholders, not the owner's real prices.</div>
+        <h3 class="noprint">Message to send</h3>
+        <pre class="msg" id="text"></pre>
+        <div class="by noprint" id="by"></div>
+        <div class="actions noprint">
+          <button class="btn wa" id="wa">Send on WhatsApp</button>
+          <button class="btn" id="copy">Copy text</button>
+          <button class="btn" id="dl">Download .txt</button>
+          <button class="btn" id="print">Print quote</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main></div>
+<footer>Quote Desk &middot; rules decide the numbers, an open-weight model only phrases, a guard checks it.</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const EXAMPLES = [
+  ["CCTV + sockets", "Good morning, I want to install 4 CCTV cameras in my shop and also 2 sockets in the back office.", "en"],
+  ["Sparking socket", "Please come urgently, my socket is sparking and there is a burning smell in the parlour", "en"],
+  ["Pump (Pidgin)", "My water pump coil don burn, abeg how much to rewind am?", "pidgin"],
+  ["2-3 bedroom wiring", "I need wiring for a 2-3 bedroom flat", "en"],
+  ["ATS options", "How much is the ATS 100A, premium and regular?", "en"],
+  ["Contactors", "Pls I need three contactors and one relay for my generator house, how much", "en"]
+];
+const KEY = "quote-desk-history-v1";
+let last = null, lastMeta = null;
+
+function store(get, val) {
+  try { if (get) return JSON.parse(localStorage.getItem(KEY) || "[]"); localStorage.setItem(KEY, JSON.stringify(val)); }
+  catch (e) { return get ? [] : null; }
+}
+const money = (sym, n) => sym + Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 });
+const pad = n => String(n).padStart(2, "0");
+
+EXAMPLES.forEach(([label, text, lang]) => {
+  const b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = label;
+  b.onclick = () => { $("msg").value = text; $("lang").value = lang; $("msg").focus(); };
+  $("chips").append(b);
+});
+
+function addPill(text, cls) { const s = document.createElement("span"); s.className = "pill " + (cls || ""); s.textContent = text; $("pills").append(s); }
+fetch("/api/status").then(r => r.json()).then(s => {
+  if (s.business) addPill(s.business);
+  addPill(s.prices === "sample" ? "Sample prices" : "Owner prices", s.prices === "sample" ? "warn" : "ok");
+  addPill(s.backend === "none" ? "Rules only" : "Model: " + (s.model || s.backend), s.backend === "none" ? "" : "ok");
+}).catch(() => addPill("Offline", "warn"));
+
+async function makeQuote() {
+  $("err").textContent = ""; $("go").disabled = true;
+  const old = $("go").innerHTML; $("go").textContent = "Working...";
+  try {
+    const r = await fetch("/api/quote", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: $("msg").value, language: $("lang").value }) });
+    const q = await r.json();
+    if (!r.ok) throw new Error(q.error || "Something went wrong");
+    const now = new Date();
+    const meta = { no: "Q-" + now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate()) + "-" + pad(now.getHours()) + pad(now.getMinutes()),
+                   date: now.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }),
+                   name: $("name").value.trim(), iso: now.toISOString() };
+    render(q, meta); saveHistory(q, meta);
+  } catch (e) { $("err").textContent = e.message; }
+  $("go").disabled = false; $("go").innerHTML = old;
+}
+
+function finalText() {
+  const name = lastMeta.name; let t = last.card_text;
+  if (!name) return t;
+  return /^Hello,/.test(t) ? t.replace(/^Hello,/, "Hello " + name + ",") : "Hi " + name + ",\n" + t;
+}
+
+function render(q, meta) {
+  last = q; lastMeta = meta;
+  $("empty").classList.add("hidden"); $("out").classList.remove("hidden");
+  $("danger").classList.toggle("hidden", !q.danger);
+  $("urg").textContent = q.urgency; $("urg").className = "badge " + q.urgency;
+  $("svcs").textContent = q.services.length ? q.services.join(", ") : "none recognised";
+  const qs = $("qs"); qs.textContent = "";
+  q.questions.forEach(x => { const li = document.createElement("li"); li.textContent = x; qs.append(li); });
+  $("biz").textContent = q.business; $("contact").textContent = q.contact || "";
+  $("qno").textContent = "Quote " + meta.no; $("qdate").textContent = meta.date;
+  $("qvalid").textContent = q.valid_days ? "Valid for " + q.valid_days + " days" : "";
+  $("forWho").textContent = meta.name ? "Prepared for " + meta.name : "";
+  const tb = $("rows"); tb.textContent = "";
+  q.lines.forEach(ln => {
+    const tr = document.createElement("tr"), a = document.createElement("td"), b = document.createElement("td");
+    a.textContent = (ln.option ? "Option: " : "") + ln.name + (ln.qty > 1 ? "  x" + ln.qty : "");
+    b.className = "num";
+    if (ln.total === null) { b.textContent = "to be confirmed"; b.classList.add("tbc"); } else b.textContent = money(q.symbol, ln.total);
+    tr.append(a, b); tb.append(tr);
+  });
+  $("total").classList.toggle("hidden", !(q.subtotal > 0)); $("totalv").textContent = money(q.symbol, q.subtotal);
+  const notes = $("notes"); notes.textContent = "";
+  q.notes.forEach(n => { const p = document.createElement("p"); p.className = "note"; p.textContent = "Note: " + n; notes.append(p); });
+  $("sampleNote").classList.toggle("hidden", !q.sample_prices);
+  $("text").textContent = finalText();
+  $("by").textContent = "Written by: " + q.phrased_by;
+  $("docCard").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function saveHistory(q, meta) {
+  const h = store(true);
+  h.unshift({ meta, q }); store(false, h.slice(0, 10)); renderHistory();
+}
+function renderHistory() {
+  const h = store(true), box = $("hist"); box.textContent = "";
+  if (!h.length) { const p = document.createElement("p"); p.className = "hint"; p.textContent = "Nothing yet. Quotes are saved only in this browser."; box.append(p); return; }
+  h.forEach(item => {
+    const d = document.createElement("div"); d.className = "hist-item"; d.tabIndex = 0;
+    const l = document.createElement("div"), r = document.createElement("b");
+    l.textContent = item.meta.no + (item.meta.name ? " · " + item.meta.name : "");
+    const sm = document.createElement("small"); sm.textContent = item.q.services.join(", ") || "no service recognised"; l.append(sm);
+    r.textContent = item.q.subtotal > 0 ? money(item.q.symbol, item.q.subtotal) : "-";
+    d.append(l, r); d.onclick = () => render(item.q, item.meta); d.onkeydown = e => { if (e.key === "Enter") render(item.q, item.meta); };
+    box.append(d);
+  });
+}
+function csvCell(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }
+$("csv").onclick = () => {
+  const rows = [["quote_no", "date", "customer", "services", "urgency", "total", "currency"]];
+  store(true).forEach(i => rows.push([i.meta.no, i.meta.iso, i.meta.name, i.q.services.join("; "), i.q.urgency, i.q.subtotal, i.q.currency]));
+  download("quotes.csv", rows.map(r => r.map(csvCell).join(",")).join("\n"), "text/csv");
+};
+$("clear").onclick = () => { if (confirm("Delete the saved quotes in this browser?")) { store(false, []); renderHistory(); } };
+
+function download(name, text, type) {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type || "text/plain" }));
+  a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+$("dl").onclick = () => last && download(lastMeta.no + ".txt", finalText());
+$("wa").onclick = () => {
+  if (!last) return; const p = $("phone").value.replace(/\D/g, "");
+  window.open((p ? "https://wa.me/" + p : "https://wa.me/") + "?text=" + encodeURIComponent(finalText()), "_blank", "noopener");
+};
+$("copy").onclick = async () => {
+  try { await navigator.clipboard.writeText(finalText()); $("copy").textContent = "Copied"; } catch (e) { $("copy").textContent = "Select and copy"; }
+  setTimeout(() => $("copy").textContent = "Copy text", 1500);
+};
+$("print").onclick = () => window.print();
+$("go").onclick = makeQuote;
+$("msg").addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) makeQuote(); });
+renderHistory();
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "_comment": "SAMPLE PRICES ONLY. These are made-up placeholders so the demo runs. The business owner copies this file to prices.json (ignored by git) and puts REAL prices there. Use null for anything the owner will price after seeing the job.",
+  "sample": true,
+  "business": "Your Business",
+  "currency": "NGN",
+  "symbol": "₦",
+  "valid_days": 7,
+  "contact": "",
+  "items": {
+    "ats_100a_regular": {"name": "ATS 100A, regular quality", "unit": "each", "price": 85000},
+    "ats_100a_premium": {"name": "ATS 100A, premium quality", "unit": "each", "price": 140000},
+    "contactor": {"name": "Contactor (supply and fit)", "unit": "each", "price": 12000},
+    "inspection": {"name": "Inspection / diagnosis visit", "unit": "visit", "price": 5000},
+    "rewind_job": {"name": "Pump / motor rewinding", "unit": "job", "price": null},
+    "site_survey": {"name": "Solar site survey and design", "unit": "visit", "price": null},
+    "cctv_camera": {"name": "CCTV camera (installed)", "unit": "each", "price": 30000},
+    "switch_socket_point": {"name": "Switch or socket (supply and fit)", "unit": "each", "price": 3500},
+    "wiring_per_bedroom": {"name": "House wiring, per bedroom", "unit": "bedroom", "price": 120000}
+  }
+}
