@@ -3,5 +3,6 @@ __pycache__/
 *.pyc
 # the owner's real prices stay private
 api/data/prices.json
+indexe.html
 
 
