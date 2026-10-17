@@ -1,7 +1,7 @@
 {
-  "_comment": "SAMPLE PRICES ONLY. These are made-up placeholders so the demo runs. The business owner copies this file to prices.json (ignored by git) and puts REAL prices there. Use null for anything the owner will price after seeing the job.",
+  "_comment": "SAMPLE PRICES ONLY. These are made-up placeholders. The business owner copies the file to prices.json (ignored by git) and puts REAL prices there. Use null for anything the owner will price after seeing the job.",
   "sample": true,
-  "business": "Your Business",
+  "business": "Our Business",
   "currency": "NGN",
   "symbol": "₦",
   "valid_days": 7,
